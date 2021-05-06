@@ -1,0 +1,11 @@
+image:
+  repository: consbio/mbtileserver
+  tag: latest
+
+storage:
+  claimName: ""
+  path: /data
+
+service:
+  externalPort: 80
+  type: LoadBalancer
