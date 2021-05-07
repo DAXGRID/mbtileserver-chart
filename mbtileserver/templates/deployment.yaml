@@ -27,7 +27,7 @@ spec:
          - name: {{ .Values.storage.claimName }}-data
            mountPath: {{ .Values.storage.path }}
         args:
-          - "-v"
-          - "-d"
-          - "{{ .Values.storage.path }}"
+        {{- range .Values.commandArgs }}
+          - {{ . }}
+        {{- end }}
       restartPolicy: Always

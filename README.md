@@ -13,7 +13,8 @@ helm repo update
 Install the chart
 ```sh
 helm upgrade --install my-release-name dax/mbtileserver
-  --set storage.claimName=my_claim_name
+  --set storage.claimName=my_claim_name \
+  --set 'commandArgs={-v, -d, /data}'
 ```
 
 ## Parameters
@@ -27,3 +28,4 @@ Parameters for the helm chart.
 | `storage.path`         | Path where the storage should be mounted   | `/data`                  |
 | `service.externalPort` | The external port                          | `80`                     |
 | `service.type`         | The service type                           | `LoadBalancer`           |
+| `commandArgs`          | Arguments mbtileserver is called with      | `{-v, -d, /data}`        |

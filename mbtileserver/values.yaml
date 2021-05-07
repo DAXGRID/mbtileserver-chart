@@ -9,3 +9,8 @@ storage:
 service:
   externalPort: 80
   type: LoadBalancer
+
+commandArgs:
+  - "-v"
+  - "-d"
+  - "/data"
