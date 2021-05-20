@@ -3,7 +3,9 @@ image:
   tag: latest
 
 storage:
-  claimName: ""
+  enabled: true
+  size: 1Gi
+  className: ""
   path: /data
 
 service:
@@ -13,4 +15,5 @@ service:
 commandArgs:
   - "-v"
   - "-d"
+  - "--enable-reload-signal"
   - "/data"

@@ -12,8 +12,8 @@ helm repo update
 
 Install the chart
 ```sh
-helm upgrade --install my-release-name dax/mbtileserver
-  --set storage.claimName=my_claim_name \
+helm upgrade --install my-release-name dax/mbtileserver \
+  --set storage.claimName=my-claim-name \
   --set 'commandArgs={-v, -d, /data}'
 ```
 
@@ -29,3 +29,9 @@ Parameters for the helm chart.
 | `service.externalPort` | The external port                          | `80`                     |
 | `service.type`         | The service type                           | `LoadBalancer`           |
 | `commandArgs`          | Arguments mbtileserver is called with      | `{-v, -d, /data}`        |
+
+
+helm upgrade --install my-release-name mbtileserver \
+  --namespace=openftth \
+  --set storage.claimName=openftth-tilegenerator-tippecanoe \
+  --set 'commandArgs={--enable-reload-signal, -v, -d, /data}'
