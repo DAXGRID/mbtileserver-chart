@@ -1,9 +1,11 @@
 image:
-  repository: consbio/mbtileserver
-  tag: latest
+  repository: openftth/mbtileserver
+  tag: v0.7.0
 
 storage:
-  claimName: ""
+  enabled: true
+  size: 1Gi
+  className: ""
   path: /data
 
 service:
@@ -11,6 +13,6 @@ service:
   type: LoadBalancer
 
 commandArgs:
-  - "-v"
+  - "--enable-reload-signal"
   - "-d"
   - "/data"

@@ -14,20 +14,46 @@ spec:
       labels:
         app: {{ .Release.Name }}-{{ .Chart.Name }}
     spec:
+      shareProcessNamespace: true
       volumes:
-       - name: {{ .Values.storage.claimName }}-data
-         persistentVolumeClaim:
-           claimName: {{ .Values.storage.claimName }}
+        - name: {{ .Release.Name }}-{{ .Chart.Name }}-data
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-{{ .Chart.Name }}
       containers:
-      - name: {{ .Release.Name }}-{{ .Chart.Name }}
-        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
-        ports:
-         - containerPort: 8000
-        volumeMounts:
-         - name: {{ .Values.storage.claimName }}-data
-           mountPath: {{ .Values.storage.path }}
-        args:
-        {{- range .Values.commandArgs }}
-          - {{ . }}
-        {{- end }}
+        - name: {{ .Release.Name }}-{{ .Chart.Name }}
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          ports:
+            - containerPort: 8000
+          volumeMounts:
+            - name: {{ .Release.Name }}-{{ .Chart.Name }}-data
+              mountPath: {{ .Values.storage.path }}
+          args:
+            {{- range .Values.commandArgs }}
+            - {{ . }}
+            {{- end }}
+          readinessProbe:
+            httpGet:
+              path: /services
+              port: 8000
+            initialDelaySeconds: 3
+            periodSeconds: 3
+          livenessProbe:
+            httpGet:
+              path: /services
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+        - name: {{ .Release.Name }}-{{ .Chart.Name }}-inotify
+          image: openftth/inotify-tools:v3.20.11.0-r0
+          volumeMounts:
+            - name: {{ .Release.Name }}-{{ .Chart.Name }}-data
+              mountPath: {{ .Values.storage.path }}
+          securityContext:
+            capabilities:
+              add:
+                - SYS_PTRACE
+          command:
+            - "/bin/sh"
+            - "-c"
+            - "while inotifywait --include '.*.mbtiles' {{ .Values.storage.path }} -e create,delete,modify; do { kill -HUP $(pgrep mbtileserver); }; done"
       restartPolicy: Always
