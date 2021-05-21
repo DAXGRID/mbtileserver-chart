@@ -31,8 +31,20 @@ spec:
             {{- range .Values.commandArgs }}
             - {{ . }}
             {{- end }}
-        - name: {{ .Release.Name }}-{{ .Chart.Name }}-busybox
-          image: openftth/inotify:v4
+          readinessProbe:
+            httpGet:
+              path: /services
+              port: 8000
+            initialDelaySeconds: 3
+            periodSeconds: 3
+          livenessProbe:
+            httpGet:
+              path: /services
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+        - name: {{ .Release.Name }}-{{ .Chart.Name }}-inotify
+          image: openftth/inotify-tools:v3.20.11.0-r0
           volumeMounts:
             - name: {{ .Release.Name }}-{{ .Chart.Name }}-data
               mountPath: {{ .Values.storage.path }}
@@ -40,5 +52,8 @@ spec:
             capabilities:
               add:
                 - SYS_PTRACE
-          command: ["/bin/sh", "-c", "while inotifywait -r {{ .Values.storage.path }} -e create,delete,modify; do { kill -HUP $(pgrep mbtileserver); }; done"]
+          command:
+            - "/bin/sh"
+            - "-c"
+            - "while inotifywait --include '.*.mbtiles' {{ .Values.storage.path }} -e create,delete,modify; do { kill -HUP $(pgrep mbtileserver); }; done"
       restartPolicy: Always
