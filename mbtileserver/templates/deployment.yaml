@@ -15,18 +15,22 @@ spec:
         app: {{ .Release.Name }}-{{ .Chart.Name }}
     spec:
       shareProcessNamespace: true
+      {{ if (eq .Values.storage.enabled true) }}
       volumes:
         - name: {{ .Release.Name }}-{{ .Chart.Name }}-data
           persistentVolumeClaim:
             claimName: {{ .Release.Name }}-{{ .Chart.Name }}
+      {{ end }}
       containers:
         - name: {{ .Release.Name }}-{{ .Chart.Name }}
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
           ports:
             - containerPort: 8000
+          {{ if (eq .Values.storage.enabled true) }}
           volumeMounts:
             - name: {{ .Release.Name }}-{{ .Chart.Name }}-data
               mountPath: {{ .Values.storage.path }}
+          {{ end }}
           args:
             {{- range .Values.commandArgs }}
             - {{ . }}
@@ -45,9 +49,11 @@ spec:
             periodSeconds: 5
         - name: {{ .Release.Name }}-{{ .Chart.Name }}-inotify
           image: openftth/inotify-tools:v3.20.11.0-r0
+          {{ if (eq .Values.storage.enabled true) }}
           volumeMounts:
             - name: {{ .Release.Name }}-{{ .Chart.Name }}-data
               mountPath: {{ .Values.storage.path }}
+          {{ end }}
           securityContext:
             capabilities:
               add:
