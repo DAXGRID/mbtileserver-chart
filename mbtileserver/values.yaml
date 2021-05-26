@@ -8,6 +8,10 @@ storage:
   className: ""
   path: /data
 
+reload:
+  enabled: true
+  watchPath: /data
+
 service:
   externalPort: 80
   type: LoadBalancer

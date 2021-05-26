@@ -47,6 +47,7 @@ spec:
               port: 8000
             initialDelaySeconds: 5
             periodSeconds: 5
+        {{ if (eq .Values.reload.enabled) }}
         - name: {{ .Release.Name }}-{{ .Chart.Name }}-inotify
           image: openftth/inotify-tools:v3.20.11.0-r0
           {{ if (eq .Values.storage.enabled true) }}
@@ -61,5 +62,6 @@ spec:
           command:
             - "/bin/sh"
             - "-c"
-            - "while inotifywait --include '.*.mbtiles' {{ .Values.storage.path }} -e create,delete,modify; do { kill -HUP $(pgrep mbtileserver); }; done"
+            - "while inotifywait --include '.*.mbtiles' {{ .Values.reload.watchPath }} -e create,delete,modify; do { kill -HUP $(pgrep mbtileserver); }; done"
+        {{ end }}
       restartPolicy: Always
