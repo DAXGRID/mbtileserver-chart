@@ -22,14 +22,16 @@ helm upgrade --install my-release-name dax/mbtileserver \
 ## Parameters
 Parameters for the helm chart.
 
-| Parameter              | Description                              | Default                               |
-|------------------------|------------------------------------------|---------------------------------------|
-| `image.repository`     | Image for mbtileserver                   | `"openftth/mbtileserver"`             |
-| `image.tag`            | Tag for mbtileserver                     | `v0.7.0`                              |
-| `storage.enabled`      | Enable storage                           | `true`                              |
-| `storage.className`    | Name storage class                       | `""`                                  |
-| `storage.size`         | The size of the storage                  | `""`                                  |
-| `storage.path`         | Path where the storage should be mounted | `/data`                               |
-| `service.externalPort` | The external port                        | `80`                                  |
-| `service.type`         | The service type                         | `LoadBalancer`                        |
-| `commandArgs`          | Arguments mbtileserver is called with    | `{--enable-reload-signal, -d, /data}` |
+| Parameter              | Description                                      | Default                               |
+|------------------------|--------------------------------------------------|---------------------------------------|
+| `image.repository`     | Image for mbtileserver                           | `"openftth/mbtileserver"`             |
+| `image.tag`            | Tag for mbtileserver                             | `v0.7.0`                              |
+| `storage.enabled`      | Enable storage                                   | `true`                                |
+| `storage.className`    | Name storage class                               | `""`                                  |
+| `storage.size`         | The size of the storage                          | `""`                                  |
+| `storage.path`         | Path where the storage should be mounted         | `/data`                               |
+| `service.externalPort` | The external port                                | `80`                                  |
+| `service.type`         | The service type                                 | `LoadBalancer`                        |
+| `commandArgs`          | Arguments mbtileserver is called with            | `{--enable-reload-signal, -d, /data}` |
+| `reload.enabled`       | Enable reload                                    | `true`                                |
+| `reload.watchPath`     | The path where changes should result in a reload | `/data`                               |
