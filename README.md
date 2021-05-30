@@ -2,7 +2,7 @@
 
 Helm 3 chart for [mbtileserver](https://github.com/consbio/mbtileserver).
 
-The Chart enables you to host the mbtileserver project, it comes with automatic reload of the tileserver using `kill -HUP` when an mbtile.
+The Chart enables you to host the mbtileserver project, it comes with automatic reload of the tileserver using `kill -HUP` when an mbtile is either created, updated or deleted.
 
 ## Install/Upgrade
 
