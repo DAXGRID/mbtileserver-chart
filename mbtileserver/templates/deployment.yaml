@@ -48,8 +48,8 @@ spec:
             initialDelaySeconds: 5
             periodSeconds: 5
         {{ if (eq .Values.reload.enabled true) }}
-        - name: {{ .Release.Name }}-{{ .Chart.Name }}-inotify
-          image: openftth/inotify-tools:v3.20.11.0-r0
+        - name: mbtileserver-watcher-sidecar
+          image: {{ .Values.reload.image }}:{{ .Values.reload.tag }}
           {{ if (eq .Values.storage.enabled true) }}
           volumeMounts:
             - name: {{ .Release.Name }}-{{ .Chart.Name }}-data
@@ -59,9 +59,7 @@ spec:
             capabilities:
               add:
                 - SYS_PTRACE
-          command:
-            - "/bin/sh"
-            - "-c"
-            - "while inotifywait --include '.*.mbtiles' {{ .Values.reload.watchPath }} -e create,delete,modify; do { kill -HUP $(pgrep mbtileserver); }; done"
+          args:
+            - "{{ .Values.reload.watchPath }}"
         {{ end }}
       restartPolicy: Always
